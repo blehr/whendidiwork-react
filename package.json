@@ -1,0 +1,28 @@
+{
+  "name": "whendidiwork-server",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "body-parser": "~1.17.1",
+    "connect-mongodb-session": "^1.3.0",
+    "cookie-parser": "~1.4.3",
+    "cors": "^2.8.3",
+    "debug": "~2.6.3",
+    "dotenv": "^4.0.0",
+    "edit-google-spreadsheet": "^0.2.21",
+    "express": "~4.15.2",
+    "express-session": "^1.15.3",
+    "moment": "^2.18.1",
+    "moment-timezone": "^0.5.13",
+    "mongoose": "^4.10.3",
+    "morgan": "~1.8.1",
+    "passport": "^0.3.2",
+    "passport-google-oauth": "^1.0.0",
+    "pug": "~2.0.0-beta11",
+    "request": "^2.81.0",
+    "serve-favicon": "~2.4.2"
+  }
+}
