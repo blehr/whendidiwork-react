@@ -1,0 +1,390 @@
+/*******************************
+   HELPERS
+******************************/
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
+html, button, input, select, textarea {
+  color: #222
+}
+html {
+  font-size: 1em;
+  line-height: 1.4;
+  font-family: Roboto, sans-serif;
+}
+::-moz-selection {
+  background: #b3d4fc;
+  text-shadow: none
+}
+::selection {
+  background: #b3d4fc;
+  text-shadow: none
+}
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #ccc;
+  margin: 1em 0;
+  padding: 0
+}
+audio, canvas, img, video {
+  vertical-align: middle
+}
+fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0
+}
+textarea {
+  resize: vertical
+}
+body {
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  line-height: 1.4;
+  margin: 0;
+  padding: 0;
+}
+p {
+  font-size: 16px;
+}
+textarea {
+  width: 100%;
+}
+table {
+  font-size: 90%
+}
+.btn:focus {
+  /* Remove outline when hovering over button */
+  outline: none;
+}
+.btn:active {
+  /* Scale the button down by 10% when clicking on button */
+  transform: scale(0.9, 0.9);
+  -webkit-transform: scale(0.9, 0.9);
+  -moz-transform: scale(0.9, 0.9);
+}
+.btn-primary {
+  background-color: #1976D2;
+}
+pre {
+  margin-top: 15px;
+}
+h1 {
+  font-weight: 700;
+}
+.primary {
+  font-family: "Roboto", Helvetica, sans-serif;
+  color: #3372df;
+  font-weight: 700;
+  display: inline-block;
+  line-height: 1;
+  letter-spacing: 1px;
+  text-decoration: none;
+}
+.text-div {
+  width: 90%;
+  max-width: 500px;
+  margin: auto;
+}
+
+/*******************************
+    HEADER
+******************************/
+
+#statusbar {
+  height: 20px;
+  width: 100%;
+  margin-top: 0;
+  background-color: #1565C0;
+}
+header {
+  width: 100%;
+  color: #fff;
+  background-color: #1976D2;
+  margin-bottom: 10px;
+}
+header h1 {
+  margin: 0 0 0 10%;
+  font-weight: 700;
+}
+header p {
+  font-size: 110%;
+  margin-left: 20%;
+  margin-right: 5%;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+nav {
+  text-align: center;
+  font-size: 1em;
+  width: 125px;
+  margin: auto;
+}
+nav ul {
+  width: 100%;
+  margin: auto;
+  padding: 0;
+}
+nav ul li {
+  display: inline-block;
+  margin-right: 20px;
+  margin-bottom: 0;
+}
+nav ul li:last-of-type {
+  margin-right: 0;
+}
+header a {
+  color: #fff;
+  text-decoration: none;
+}
+header a:hover {
+  color: #fff;
+  text-decoration: none;
+}
+header a:focus {
+  color: #FF80AB;
+  font-weight: 700;
+  text-decoration: none;
+}
+header a:active {
+  color: #FF4081;
+  text-decoration: none;
+}
+
+/*******************************
+    TOP-ROW
+******************************/
+
+.top-row {
+  min-height: 75px;
+}
+.confirmation {
+  text-align: center;
+}
+.top-row-profile {
+  text-align: right;
+}
+#display-name {
+  font-weight: 700;
+  font-size: 1.2em;
+}
+.logout {
+  height: 50px;
+}
+h4 {
+  margin-top: 0;
+}
+.open-links, .confirmation, .top-row-profile {
+  margin-bottom: 10px;
+}
+
+/*******************************
+    LOGIN PAGE
+******************************/
+
+.main-content {
+  min-height: 600px;
+}
+.login-google {
+  width: 207px;
+  margin: auto;
+  display: block;
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
+.login-message h1 {
+  text-align: center;
+  margin-top: 35px;
+  margin-bottom: 25px;
+}
+.login-message {
+  max-width: 500px;
+  margin: auto;
+}
+.logo-div {
+  max-width: 350px;
+  margin-left: auto;
+  margin-bottom: 50px;
+}
+.login-logo {
+  width: 100%
+}
+.screenshot {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 25px;
+  width: 100%;
+  border: 2px solid #1565C0;
+}
+.screenshot-mobile {
+  display: none;
+}
+/*******************************
+    HOME PAGE
+******************************/
+
+.calendar-event {
+  margin-bottom: 15px;
+}
+.form {
+  margin-bottom: 25px;
+}
+.calendar-events-col {
+  text-align: center;
+  margin-bottom: 25px;
+}
+.panel {
+  max-width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+.panel-footer button:first-of-type {
+  margin-right: 15%;
+}
+
+/****************************
+    faq
+*****************************/
+
+.danger, .text-div span {
+  color: #ff0000;
+  font-weight: 700;
+}
+.contact-info {
+  font-size: 1em;
+  margin-bottom: 50px;
+}
+.contact-header {
+  margin-top: 15px;
+}
+.contact-info a {
+  display: block;
+  background-repeat: no-repeat;
+  background-size: 20px 20px;
+  padding: 0 0 0 30px;
+  margin: 0 0 10px;
+}
+/*.contact-info p.mail a {
+  background-image: url('../img/mail.png');
+}
+.contact-info p.twitter a {
+  background-image: url('../img/twitter.png');
+}*/
+
+/*******************************
+    footer
+  ******************************/
+
+footer {
+  height: 150px;
+  clear: both;
+  padding: 10px 10px 0 10px;
+  color: #fff;
+  background-color: #0D47A1;
+}
+#bottom-bar {
+  width: 100%;
+  height: 5px;
+  background-color: #00695C;
+}
+.footer-div {
+  display: table;
+  width: 100%;
+  height: 100%;
+}
+.footer-img {
+  display: table-cell;
+  text-align: right;
+  vertical-align: bottom;
+}
+.footer-p {
+  text-align: left;
+  display: table-cell;
+  vertical-align: bottom;
+}
+footer a,
+footer a:hover,
+footer a:focus {
+  color: #fff;
+}
+
+
+/*******************************
+    MEDIA QUERIES
+  ******************************/
+
+@media only screen and (max-width: 700px) {
+  header p, header h1 {
+    text-align: center;
+    margin-left: 0;
+    margin-right: 0
+  }
+  header p {
+    font-size: 95%;
+  }
+}
+@media (max-width: 768px) {
+  .top-row-profile, .confirmation {
+    text-align: left;
+  }
+  .main-content {
+    width: 90%
+  }
+  .logo-div {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .screenshot-full {
+    display: none;
+  }
+  .screenshot-mobile {
+    display: block;
+  }
+  .footer-div {
+    height: 100%;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-flex-wrap: nowrap;
+    -ms-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    -webkit-align-content: stretch;
+    -ms-flex-line-pack: stretch;
+    align-content: stretch;
+    -webkit-align-items: flex-start;
+    -ms-flex-align: start;
+    align-items: flex-start;
+  }
+  .footer-img, .footer-p {
+    display: block;
+    text-align: left;
+    -webkit-flex: 0 1 auto;
+    -ms-flex: 0 1 auto;
+    flex: 0 1 auto;
+    -webkit-align-self: auto;
+    -ms-flex-item-align: auto;
+    align-self: auto;
+  }
+  .footer-p {
+    margin: 0;
+    -webkit-order: 2;
+    -ms-flex-order: 2;
+    order: 2;
+  }
+  .footer-img {
+    -webkit-order: 1;
+    -ms-flex-order: 1;
+    order: 1;
+  }
+}
