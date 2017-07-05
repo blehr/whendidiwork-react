@@ -161,8 +161,10 @@ header a:active {
 .top-row {
   min-height: 75px;
 }
-.confirmation {
-  text-align: center;
+.stopwatch {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
 }
 .top-row-profile {
   text-align: right;
@@ -177,7 +179,7 @@ header a:active {
 h4 {
   margin-top: 0;
 }
-.open-links, .confirmation, .top-row-profile {
+.open-links, .confirmation, .top-row-profile .stopwatch {
   margin-bottom: 10px;
 }
 
@@ -247,6 +249,16 @@ h4 {
   margin-right: 15%;
 }
 
+.table>tbody>tr>td {
+  /*min-width: 130px;*/
+  max-width: 200px;
+  vertical-align: middle;
+}
+
+.table-responsive {
+  /*margin-left: auto;
+  width: 90%;*/
+}
 /****************************
     faq
 *****************************/
@@ -293,7 +305,8 @@ footer {
   background-color: #00695C;
 }
 .footer-div {
-  display: table;
+  display: flex;
+  align-items: flex-end;
   width: 100%;
   height: 100%;
 }
@@ -302,11 +315,7 @@ footer {
   text-align: right;
   vertical-align: bottom;
 }
-.footer-p {
-  text-align: left;
-  display: table-cell;
-  vertical-align: bottom;
-}
+
 footer a,
 footer a:hover,
 footer a:focus {

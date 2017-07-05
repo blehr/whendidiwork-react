@@ -1,16 +1,11 @@
-import {
-  AUTH_USER,
-  UNAUTH_USER,
-  GET_USER
-} from '../actions/types.js';
+import { AUTH_USER, UNAUTH_USER, GET_USER } from "../actions/types.js";
 
 const initialState = {
   auth: false,
   id: null,
   name: null,
   profileImg: null
-}
-
+};
 
 export default function(state = initialState, action) {
   switch (action.type) {
@@ -19,7 +14,11 @@ export default function(state = initialState, action) {
     case UNAUTH_USER:
       return initialState;
     case GET_USER:
-      return { ...state, name: action.payload.google.displayName, profileImg: action.payload.google.profileImg };
+      return {
+        ...state,
+        name: action.payload.google.displayName,
+        profileImg: action.payload.google.profileImg
+      };
     default:
       return state;
   }

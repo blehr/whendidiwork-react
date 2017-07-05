@@ -1,18 +1,18 @@
 import React from 'react';
 import {
-  BrowserRouter as Router,
+  Router,
   Route
 } from 'react-router-dom';
+import history from './History'
 import Home from './components/routes/Home';
 import Login from './components/routes/Login';
 import Faq from './components/routes/Faq';
 import AuthCallback from './components/routes/Auth-Callback';
-import RequireAuth from './components/Require-Auth';
 
 const Routes = props => (
-  <Router>
+  <Router history={history}>
     <div>
-      <Route exact path="/" component={RequireAuth(Home)} />
+      <Route exact path="/" component={Home} />
       <Route path="/auth/google/callback/:id?" component={AuthCallback} />
       <Route path="/login" component={Login} />
       <Route path="/faq" component={Faq} />

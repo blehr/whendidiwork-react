@@ -1,6 +1,7 @@
 'use strict';
 
 var mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
 var Schema = mongoose.Schema;
 
 var Event = new Schema({
@@ -9,7 +10,7 @@ var Event = new Schema({
   },
   sheet: {
     id: String,
-    row: Number
+    range: String
   },
   calendar: {
     id: String,

@@ -1,27 +1,35 @@
 import React from "react";
 import PropTypes from "prop-types";
+import {
+  Card,
+  CardTitle,
+  CardText
+} from "material-ui/Card";
+import { isAllDayEvent } from "../utils";
 
-const Confirmation = props => {
+const StopWatch = ({ createdEvent }) => {
   return (
-    <div className="col-sm-4 col-sm-pull-4 confirmation">
-      <h4>Confirmation</h4>
-      <div className="panel panel-success">
-        <div className="panel-heading">
-          <h3 className="panel-title">{props.confirmedSummary}</h3>
-        </div>
-        <div className="panel-body">
-          <span className="cal-event-start">{props.confirmedStart}</span>
-          <br />
-          <span className="cal-event-end">{props.confirmedEnd}</span>
-        </div>
-      </div>
-    </div>
+      <Card style={{minHeight: "75px", textAlign: "center", maxWidth: "320px", margin: "auto"}}>
+        <CardTitle
+          title={createdEvent && createdEvent.summary}
+          titleStyle={{ fontSize: "18px" }}
+          style={{ padding: "0 16px" }}
+        />
+        <CardText
+          style={{
+            fontSize: "16px",
+            textAlign: "center",
+            padding: 0
+          }}
+        >
+          {createdEvent && isAllDayEvent(createdEvent)}
+        </CardText>
+      </Card>
   );
 };
 
-Confirmation.propTypes = {
-  confirmedSummary: PropTypes.string,
-  confirmedStart: PropTypes.string
+StopWatch.propTypes = {
+  createdEvent: PropTypes.object,
 };
 
-export default Confirmation;
+export default StopWatch;

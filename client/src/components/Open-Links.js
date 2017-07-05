@@ -9,7 +9,12 @@ const OpenLinks = props => {
           Open Calendar
         </a>
         <br />
-        <a className="primary" href={props.sheetLink}>Open Sheet</a>
+        <a
+          className="primary"
+          href={`https://docs.google.com/spreadsheets/d/${props.sheetId}/edit#gid=0`}
+        >
+          Open Sheet
+        </a>
         <br />
       </div>
     </div>

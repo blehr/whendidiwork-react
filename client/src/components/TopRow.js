@@ -1,24 +1,23 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import Profile from "./profile";
 import OpenLinks from "./Open-Links";
-import Confirmation from "./Confirmation";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
 class TopRow extends Component {
   render() {
-    const { user, logout } = this.props;
+    const { user, logout, sheetId } = this.props;
     return (
       <div className="row top-row">
         <Profile user={user} logout={logout} />
-        <OpenLinks />
-        <Confirmation />
+        <OpenLinks sheetId={sheetId} />
       </div>
     );
   }
 }
 
 TopRow.propTypes = {
-
+  user: PropTypes.object,
+  logout: PropTypes.func
 };
 
 export default TopRow;

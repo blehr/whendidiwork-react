@@ -1,26 +1,27 @@
 const express = require("express");
 const passport = require("passport");
 const path = process.cwd();
-require('../services/google-passport')(passport);
-
+const cors = require("cors");
+require("../services/google-passport")(passport);
 
 const authRouter = express.Router();
+authRouter.use(cors({ origin: true, credentials: true }));
 
 const requireAuth = passport.authenticate("google", {
   failureRedirect: "/login"
 });
 
-const User = require("../models/users");
-const AuthController = require("../controllers/auth.controller.js")();
 
 const routes = function routes() {
   authRouter.route("/google").get(
     passport.authenticate("google", {
+      accessType: "offline",
       scope: [
         "profile",
         "email",
         "https://www.googleapis.com/auth/calendar",
-        "https://www.googleapis.com/auth/drive"
+        "https://www.googleapis.com/auth/drive",
+        "https://www.googleapis.com/auth/spreadsheets"
       ]
     })
   );
@@ -28,10 +29,6 @@ const routes = function routes() {
   authRouter.route("/google/callback").get(requireAuth, function(req, res) {
     res.redirect("/auth/google/callback/" + req.user.id);
   });
-
-  authRouter.route("/user").get(AuthController.getUser);
-
-  authRouter.route("/logout").get(AuthController.logout);
 
   return authRouter;
 };

@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import PrimaryButton from "./Primary-Button";
+import RaisedButton from 'material-ui/RaisedButton';
 
 const Profile = props => {
   return (
@@ -8,12 +8,12 @@ const Profile = props => {
       <div>
         <span id="display-name" >{props.user.name}</span>
         <br />
-        <PrimaryButton handleClick={props.logout} text="Log Out" />
+        <RaisedButton onTouchTap={props.logout} label="Log Out" primary={true} />
         <img
           src={props.user.profileImg}
           className="img-rounded"
           alt="profile"
-          style={{width: "50px", height: "50px"}}
+          style={{width: "36px", height: "36px", marginLeft: "5px"}}
         />
       </div>
     </div>
@@ -21,8 +21,8 @@ const Profile = props => {
 };
 
 Profile.propTypes = {
-  displayName: PropTypes.string,
-  profileImg: PropTypes.any
+  user: PropTypes.object,
+  logout: PropTypes.func
 };
 
 export default Profile;

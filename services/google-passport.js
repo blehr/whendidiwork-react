@@ -1,11 +1,12 @@
 'use strict';
 
-var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
-var User = require('../models/users');
+const User = require('../models/users');
 
-var configAuth = require('./auth');
+const configAuth = require('./auth');
 
+const moment = require("moment");
 
 
 module.exports = function(passport) {
@@ -25,7 +26,8 @@ module.exports = function(passport) {
       callbackURL: configAuth.googleAuth.callbackURL,
       passReqToCallback: true // allows us to pass in the req from our route (lets us check if a user is logged in or not)
     },
-    function(req, accessToken, refreshToken, profile, done) {
+    function(req, accessToken, refreshToken, params, profile, done) {
+      const expiry_date = moment().add(params.expires_in, "s").format("X");
       process.nextTick(function() {
         if (!req.user) {
 
@@ -43,29 +45,31 @@ module.exports = function(passport) {
               if (!user.google.token) {
 
                 user.google.token = accessToken;
-                user.google.refreshToken = refreshToken;
+                if (!user.google.refreshToken) user.google.refreshToken = refreshToken;
                 user.google.displayName = profile.displayName;
                 user.google.email = profile.emails[0].value;
                 user.google.profileImg = profile.photos[0].value;
+                user.google.expiry_date = expiry_date;
 
 
                 user.save(function(err) {
                   if (err)
-                    throw err;
+                    throw new ERROR("Error saving user: " + err);
                   return done(null, user);
                 });
               }
               //save new token
               user.google.profileImg = profile.photos[0].value;
               user.google.token = accessToken;
-              user.google.refreshToken = refreshToken;
+              if (!user.google.refreshToken) user.google.refreshToken = refreshToken;
+              user.google.expiry_date = expiry_date;
               user.save(function(err) {
-                  if (err) throw err;
+                  if (err) throw new ERROR("Error saving new token: " + err);
                   return done(null, user);
                 });
 
             } else {
-              var newUser = new User();
+              const newUser = new User();
 
               newUser.google.id = profile.id;
               newUser.google.token = accessToken;
@@ -75,10 +79,11 @@ module.exports = function(passport) {
               newUser.google.profileImg = profile.photos[0].value;
               newUser.lastUsed.calendar = '';
               newUser.lastUsed.sheet = '';
+              newUser.google.expiry_date = expiry_date;
 
               newUser.save(function(err) {
                 if (err) {
-                  throw err;
+                  throw new ERROR("Error saving new user: " + err);
                 }
 
                 return done(null, newUser);
@@ -87,19 +92,20 @@ module.exports = function(passport) {
           });
         } else {
           // user already exists and is logged in, we have to link accounts
-          var user = req.user; // pull the user out of the session
+          const user = req.user; // pull the user out of the session
 
           // update the current users google credentials
           user.google.id = profile.id;
           user.google.token = accessToken;
-          user.google.refreshToken = refreshToken;
+          if (!user.google.refreshToken) user.google.refreshToken = refreshToken;
           user.google.displayName = profile.displayName;
           user.google.email = profile.emails[0].value;
           user.google.profileImg = profile.photos[0].value;
+          user.google.expiry_date = expiry_date;
           // save the user
           user.save(function(err) {
             if (err)
-              throw err;
+              throw new ERROR("Error updating user: " + err);
             return done(null, user);
           });
         }
