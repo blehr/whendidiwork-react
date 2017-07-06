@@ -8,6 +8,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const passport = require('passport');
+const helmet = require('helmet');
 const MongoDBStore = require('connect-mongodb-session')(session);
  
 require('dotenv').load();
@@ -17,6 +18,7 @@ const authRouter = require('./routes/auth-router')();
 const apiRouter = require('./routes/api-router')();
 
 const app = express();
+app.use(helmet());
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
