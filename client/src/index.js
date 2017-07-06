@@ -3,7 +3,6 @@ import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import storeConfig from "./store";
 import Routes from "./routes";
-import registerServiceWorker from "./registerServiceWorker";
 import "./styles/index.css";
 import injectTapEventPlugin from "react-tap-event-plugin";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
@@ -32,4 +31,3 @@ ReactDOM.render(
   </MuiThemeProvider>,
   document.getElementById("root")
 );
-registerServiceWorker();

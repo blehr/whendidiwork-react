@@ -1,5 +1,5 @@
 import axios from "axios";
-import history from '../History'
+import history from "../History";
 
 import {
   AUTH_USER,
@@ -35,8 +35,6 @@ import {
   SET_MESSAGE
 } from "./types.js";
 
-const ROOT_URL = "http://localhost:8081";
-
 export const authUser = id => {
   return {
     type: AUTH_USER,
@@ -47,7 +45,7 @@ export const authUser = id => {
 export const unauthUser = () => {
   return dispatch => {
     axios({
-      url: `${ROOT_URL}/api/logout`,
+      url: `/api/logout`,
       method: "get",
       withCredentials: true
     })
@@ -79,37 +77,33 @@ export const showFormError = () => ({
 export const checkForUser = () => {
   return dispatch => {
     axios({
-      url: `${ROOT_URL}/api/user`,
+      url: `/api/user`,
       method: "get",
       withCredentials: true
     })
-    .then(response => {
-      if (!response.data) {
+      .then(response => {
+        if (!response.data) {
+          history.push("/login");
+        } else {
+          history.push("/");
+          dispatch(authUser(response.data._id));
+          dispatch({
+            type: GET_USER,
+            payload: response.data
+          });
+          dispatch(getCalendarList());
+          dispatch(getFiles());
+          if (response.data.lastUsed.calendar) {
+            dispatch(getCalendarEvents(response.data.lastUsed.calendar));
+          }
+          if (response.data.lastUsed.sheet) {
+            dispatch(getSheetMeta(response.data.lastUsed.sheet));
+          }
+        }
+      })
+      .catch(err => {
         history.push("/login");
-        // dispatch(unauthUser());
-      } else {
-        history.push("/");
-        dispatch(authUser(response.data._id));
-        dispatch({
-          type: GET_USER,
-          payload: response.data
-        });
-        // dispatch(getUser(response.data._id));
-        dispatch(getCalendarList());
-        dispatch(getFiles());
-        if (response.data.lastUsed.calendar) {
-          dispatch(getCalendarEvents(response.data.lastUsed.calendar));
-        }
-        if (response.data.lastUsed.sheet) {
-          dispatch(getSheetMeta(response.data.lastUsed.sheet));
-        }
-      }
-    })
-    .catch(err => {
-      history.push("/login");
-      // console.log(err);
-      // dispatch(setError(err.response.data.message || err));
-    });
+      });
   };
 };
 
@@ -121,7 +115,7 @@ export const getUser = id => {
       };
     }
     axios({
-      url: `${ROOT_URL}/api/user`,
+      url: `/api/user`,
       method: "get",
       withCredentials: true
     })
@@ -147,7 +141,7 @@ export const getCalendarList = () => {
   return dispatch => {
     axios({
       method: "get",
-      url: `${ROOT_URL}/api/getCalendarList`,
+      url: `/api/getCalendarList`,
       withCredentials: true
     })
       .then(response => {
@@ -164,7 +158,7 @@ export const getFiles = () => {
   return dispatch => {
     axios({
       method: "get",
-      url: `${ROOT_URL}/api/getFiles`,
+      url: `/api/getFiles`,
       withCredentials: true
     })
       .then(response => {
@@ -228,7 +222,7 @@ export const getCalendarEvents = id => {
   return dispatch => {
     axios({
       method: "get",
-      url: `${ROOT_URL}/api/getEvents/${id}`,
+      url: `/api/getEvents/${id}`,
       withCredentials: true
     })
       .then(response => {
@@ -245,7 +239,7 @@ export const getSheetMeta = id => {
   return dispatch => {
     axios({
       method: "get",
-      url: `${ROOT_URL}/api/getSheetMeta/${id}`,
+      url: `/api/getSheetMeta/${id}`,
       withCredentials: true
     })
       .then(response => {
@@ -262,7 +256,7 @@ export const createEvent = (event, calendar, sheet) => {
   return dispatch => {
     axios({
       method: "post",
-      url: `${ROOT_URL}/api/createEvent/${calendar.id}/${sheet.id}`,
+      url: `/api/createEvent/${calendar.id}/${sheet.id}`,
       withCredentials: true,
       data: {
         event: { ...event, timeZone: calendar.timeZone }
@@ -287,7 +281,7 @@ export const deleteEvent = (event, calendarId, sheetId) => {
   return dispatch => {
     axios({
       method: "delete",
-      url: `${ROOT_URL}/api/deleteEvent/${calendarId}/${event.id}`,
+      url: `/api/deleteEvent/${calendarId}/${event.id}`,
       withCredentials: true
     })
       .then(response => {
@@ -308,7 +302,7 @@ export const updateEvent = (event, calendar, sheetId) => {
   return dispatch => {
     axios({
       method: "put",
-      url: `${ROOT_URL}/api/updateEvent/${calendar.id}/${event.editEventId}`,
+      url: `/api/updateEvent/${calendar.id}/${event.editEventId}`,
       withCredentials: true,
       data: {
         event: { ...event, timeZone: calendar.timeZone }
@@ -360,7 +354,7 @@ export const createNewSheet = name => {
   return dispatch => {
     axios({
       method: "post",
-      url: `${ROOT_URL}/api/createSheet`,
+      url: `/api/createSheet`,
       withCredentials: true,
       data: {
         sheet: name
@@ -380,7 +374,7 @@ export const createNewCalendar = (name, timeZone) => {
   return dispatch => {
     axios({
       method: "post",
-      url: `${ROOT_URL}/api/createCalendar`,
+      url: `/api/createCalendar`,
       withCredentials: true,
       data: {
         calendar: name,
