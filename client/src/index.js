@@ -8,6 +8,7 @@ import injectTapEventPlugin from "react-tap-event-plugin";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import getMuiTheme from "material-ui/styles/getMuiTheme";
 import { checkForUser } from "./actions";
+// import registerServiceWorker from "./registerServiceWorker";
 
 // Needed for onTouchTap
 injectTapEventPlugin();
@@ -31,3 +32,4 @@ ReactDOM.render(
   </MuiThemeProvider>,
   document.getElementById("root")
 );
+// registerServiceWorker();

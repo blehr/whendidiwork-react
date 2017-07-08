@@ -1,11 +1,9 @@
-// var request = require("request");
 var moment = require("moment-timezone");
 var Event = require("../models/event.js");
 var User = require("../models/users.js");
 var google = require("googleapis");
 var OAuth2 = google.auth.OAuth2;
 var auth = require("../services/auth");
-// const checkToken = require("../services/token-validator");
 
 const oauth2Client = new OAuth2(
   auth.googleAuth.clientID,
@@ -531,21 +529,6 @@ module.exports = function ApiController() {
     }
   };
 
-  const checkToken = function(req, res) {
-    var token = req.user.google.token;
-    var refreshToken = req.user.google.refreshToken;
-
-    var options = {
-      method: "GET",
-      url:
-        "https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=" + token
-    };
-    request(options, function(err, response, body) {
-      if (err) throw err;
-      res.send(body);
-    });
-  };
-
   return {
     logout,
     getUser,
@@ -557,7 +540,6 @@ module.exports = function ApiController() {
     getFiles,
     getSheetMeta,
     createCalendar,
-    createSheet,
-    checkToken
+    createSheet
   };
 };

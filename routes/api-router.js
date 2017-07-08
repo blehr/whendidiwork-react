@@ -39,8 +39,6 @@ const routes = () => {
 
   apiRouter.route("/createSheet").post(ApiController.createSheet);
 
-  apiRouter.route("/checkToken").get(ApiController.checkToken);
-
   return apiRouter;
 };
 

@@ -49,7 +49,6 @@ app.use(session({
   store: store
 }));
 
-// app.use(checkToken);
 app.use(passport.initialize());
 app.use(passport.session());
 

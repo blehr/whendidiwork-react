@@ -12,7 +12,6 @@
     "cors": "^2.8.3",
     "debug": "~2.6.3",
     "dotenv": "^4.0.0",
-    "edit-google-spreadsheet": "^0.2.21",
     "express": "~4.15.2",
     "express-session": "^1.15.3",
     "googleapis": "^19.0.0",
@@ -24,7 +23,6 @@
     "passport": "^0.3.2",
     "passport-google-oauth": "^1.0.0",
     "pug": "~2.0.0-beta11",
-    "request": "^2.81.0",
     "serve-favicon": "~2.4.2"
   }
 }

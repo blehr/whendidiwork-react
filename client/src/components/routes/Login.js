@@ -3,17 +3,8 @@ import App from "../App";
 import whendidiworkLogo from "../../assets/img/whendidiwork_icon.png";
 import fullScreenshot from "../../assets/img/screenshot-whendidiwork-full.png";
 import mobileScreenshot from "../../assets/img/screenshot-whendidiwork-mobile.png";
-import RaisedButton from 'material-ui/RaisedButton';
-
+import RaisedButton from "material-ui/RaisedButton";
 class Login extends Component {
-  constructor(props) {
-    super(props);
-
-    this.login = this.login.bind(this);
-  }
-  login() {
-    this.props.login();
-  }
   render() {
     return (
       <App>
@@ -29,7 +20,13 @@ class Login extends Component {
                 whendidiwork calendar.
               </p>
               <p>Keep track of everything in one convenient place!</p>
-              <RaisedButton href="http://localhost:8081/auth/google" primary={true} label="Login with Google" className="login-google" style={{display: "block"}}/>
+              <RaisedButton
+                href="http://localhost:8081/auth/google"
+                primary={true}
+                label="Login with Google"
+                className="login-google"
+                style={{ display: "block" }}
+              />
             </div>
             <div className="col-sm-6">
               <div className="logo-div">
