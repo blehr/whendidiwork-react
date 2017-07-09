@@ -21,7 +21,7 @@ class Login extends Component {
               </p>
               <p>Keep track of everything in one convenient place!</p>
               <RaisedButton
-                href="http://localhost:8081/auth/google"
+                href="/auth/google"
                 primary={true}
                 label="Login with Google"
                 className="login-google"

@@ -9,7 +9,7 @@ const Navigation = ({ location }) => {
       <ul>
         <li>
           {location.pathname === "/login"
-            ? <a href="http://localhost:8081/auth/google">LOG IN</a>
+            ? <a href="/auth/google">LOG IN</a>
             : <Link to="/">HOME</Link>}
         </li>
         <li><Link to="/faq">FAQ</Link></li>
