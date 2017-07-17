@@ -15,9 +15,11 @@ import {
   RESPONSE_DIALOG_CLOSE,
   RESPONSE_DIALOG_OPEN,
   SET_ERROR,
-  SET_MESSAGE
+  SET_MESSAGE,
+  IS_FETCHING
 } from "../actions/types.js";
 const initialState = {
+  isFetching: false,
   isEditing: false,
   createdEvent: null,
   createEvent: { note: "" },
@@ -131,6 +133,8 @@ export default function(state = initialState, action) {
       return { ...state, error: action.payload, showResponseDialog: true };
     case SET_MESSAGE:
       return { ...state, message: action.payload, showResponseDialog: true };
+    case IS_FETCHING: 
+      return { ...state, isFetching: action.payload };
     case CLEAR_FORM:
       return {
         ...state,

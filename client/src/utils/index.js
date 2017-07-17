@@ -20,7 +20,7 @@ export const isAllDayEvent = event => {
 
 export const scrollToTop = () => {
   var timerID = setInterval(function() {
-      window.scrollBy(0, -5);
+      window.scrollBy(0, -10);
 
       if (window.pageYOffset <= 0) {
         clearInterval(timerID)

@@ -9,6 +9,7 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 const passport = require('passport');
 const helmet = require('helmet');
+const expressValidator = require('express-validator');
 const MongoDBStore = require('connect-mongodb-session')(session);
  
 require('dotenv').load();
@@ -37,6 +38,7 @@ const store = new MongoDBStore({
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(expressValidator());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'client/build')));
 

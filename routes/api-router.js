@@ -2,7 +2,8 @@ const express = require("express");
 const passport = require("passport");
 const path = process.cwd();
 const cors = require("cors");
-const {checkToken} = require("../services/token-validator");
+const { checkToken } = require("../services/token-validator");
+const { validateInputs, validateParams } = require("./route-middleware");
 
 const ApiController = require("../controllers/api-controller.js")();
 
@@ -17,23 +18,23 @@ const routes = () => {
 
   apiRouter.route("/getCalendarList").get(ApiController.getCalendarList);
 
-  apiRouter.route("/getEvents/:calendarId").get(ApiController.getEvents);
+  apiRouter.route("/getEvents/:calendarId").get(validateParams, ApiController.getEvents);
 
   apiRouter
     .route("/createEvent/:calendarId/:sheetId")
-    .post(ApiController.createEvent);
+    .post(validateParams, validateInputs, ApiController.createEvent);
 
   apiRouter
     .route("/updateEvent/:calendarId/:eventId")
-    .put(ApiController.updateEvent);
+    .put(validateParams, validateInputs, ApiController.updateEvent);
 
   apiRouter
     .route("/deleteEvent/:calendarId/:eventId")
-    .delete(ApiController.deleteEvent);
+    .delete(validateParams, ApiController.deleteEvent);
 
   apiRouter.route("/getFiles").get(ApiController.getFiles);
 
-  apiRouter.route("/getSheetMeta/:sheetId").get(ApiController.getSheetMeta);
+  apiRouter.route("/getSheetMeta/:sheetId").get(validateParams, ApiController.getSheetMeta);
 
   apiRouter.route("/createCalendar").post(ApiController.createCalendar);
 

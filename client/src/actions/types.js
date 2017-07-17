@@ -35,3 +35,4 @@ export const RESPONSE_DIALOG_OPEN = "response_dialog_open";
 export const RESPONSE_DIALOG_CLOSE = "response_dialog_close";
 export const SET_MESSAGE = "set_message";
 export const SET_ERROR = "set_error";
+export const IS_FETCHING = "is_fetching";

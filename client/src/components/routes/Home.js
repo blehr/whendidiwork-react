@@ -177,7 +177,7 @@ class Home extends Component {
           <TopRow
             user={this.props.auth}
             logout={this.props.unauthUser}
-            sheetId={this.props.sheet.selectedSheet && this.props.sheet.selectedSheet.id || ""}
+            sheetId={(this.props.sheet.selectedSheet && this.props.sheet.selectedSheet.id) || ""}
           />
           <hr />
           <div className="row">
@@ -285,6 +285,7 @@ class Home extends Component {
           createdEvent={this.props.event.createdEvent || null}
           error={this.props.event.error}
           message={this.props.event.message}
+          isFetching={this.props.event.isFetching}
         />
       </App>
     );

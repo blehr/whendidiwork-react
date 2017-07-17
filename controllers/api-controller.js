@@ -36,12 +36,28 @@ function ISODateString(d) {
   );
 }
 
-var today = moment();
-var weekPast = moment().subtract(7, "days").toDate();
-var weekAhead = moment().add(7, "days").toDate();
+function formatDateTime(date, time) {
+  return (
+    moment(date).format("YYYY-MM-DD") +
+    "T" +
+    moment(time).format("HH:mm:ss.SSS")
+  );
+}
 
-var weekPastGCF = ISODateString(weekPast);
-var weekAheadGCF = ISODateString(weekAhead);
+function formatSheetValues(event) {
+  return {
+    startDate: moment(event.startDate).format("ddd MM/DD/YYYY"),
+    startTime: moment(event.startTime).format("hh:mm A"),
+    endDate: moment(event.endDate).format("ddd MM/DD/YYYY"),
+    endTime: moment(event.endTime).format("hh:mm A"),
+    summary: event.note
+  };
+}
+
+const weekPast = moment().subtract(7, "days").toDate();
+const weekAhead = moment().add(7, "days").toDate();
+const weekPastGCF = ISODateString(weekPast);
+const weekAheadGCF = ISODateString(weekAhead);
 
 module.exports = function ApiController() {
   const logout = function(req, res) {
@@ -51,7 +67,7 @@ module.exports = function ApiController() {
 
   const getUser = function(req, res, next) {
     if (!req.user) {
-      const err = { message: "No logged in user"};
+      const err = { message: "No logged in user" };
       return next(err);
     }
     res.json(req.user);
@@ -145,23 +161,16 @@ module.exports = function ApiController() {
     var refreshToken = req.user.google.refreshToken;
     var CalId = req.params.calendarId;
     var sheetId = req.params.sheetId;
+
     var event = req.body.event;
-    var startDate = moment(event.startDate).format("ddd MM/DD/YYYY");
-    var startTime = moment(event.startTime).format("hh:mm A");
-    var endDate = moment(event.endDate).format("ddd MM/DD/YYYY");
-    var endTime = moment(event.endTime).format("hh:mm A");
-    var summary = event.note;
+    var sheet = formatSheetValues(event);
 
-    function formatDateTime(date, time) {
-      return (
-        moment(date).format("YYYY-MM-DD") +
-        "T" +
-        moment(time).format("HH:mm:ss.SSS")
-      );
+    var startDateTime = formatDateTime(event.startDate, event.startTime);
+    var endDateTime = formatDateTime(event.endDate, event.endTime);
+
+    if (startDateTime > endDateTime) {
+      return next("Events must start before they end!");
     }
-
-    const startDateTime = formatDateTime(event.startDate, event.startTime);
-    const endDateTime = formatDateTime(event.endDate, event.endTime);
 
     function formatTimeZone(date) {
       return moment(date).tz(event.timeZone).format();
@@ -193,7 +202,15 @@ module.exports = function ApiController() {
           range: "Sheet1",
           resource: {
             majorDimension: "ROWS",
-            values: [[startDate, startTime, endDate, endTime, summary]]
+            values: [
+              [
+                sheet.startDate,
+                sheet.startTime,
+                sheet.endDate,
+                sheet.endTime,
+                sheet.summary
+              ]
+            ]
           }
         },
         function(err, response) {
@@ -209,8 +226,8 @@ module.exports = function ApiController() {
           auth: oauth2Client,
           calendarId: CalId,
           resource: {
-            summary: summary,
-            description: summary,
+            summary: sheet.summary,
+            description: sheet.summary,
             start: {
               dateTime: formatTimeZone(startDateTime)
             },
@@ -257,24 +274,13 @@ module.exports = function ApiController() {
     var token = req.user.google.token;
     var refreshToken = req.user.google.refreshToken;
     var CalId = req.params.calendarId;
-    const eventId = req.params.eventId;
+    var eventId = req.params.eventId;
+
     var event = req.body.event;
-    var startDate = moment(event.startDate).format("ddd MM/DD/YYYY");
-    var startTime = moment(event.startTime).format("hh:mm A");
-    var endDate = moment(event.endDate).format("ddd MM/DD/YYYY");
-    var endTime = moment(event.endTime).format("hh:mm A");
-    var summary = event.note;
+    var sheet = formatSheetValues(event);
 
-    function formatDateTime(date, time) {
-      return (
-        moment(date).format("YYYY-MM-DD") +
-        "T" +
-        moment(time).format("HH:mm:ss.SSS")
-      );
-    }
-
-    const startDateTime = formatDateTime(event.startDate, event.startTime);
-    const endDateTime = formatDateTime(event.endDate, event.endTime);
+    var startDateTime = formatDateTime(event.startDate, event.startTime);
+    var endDateTime = formatDateTime(event.endDate, event.endTime);
 
     function formatTimeZone(date) {
       return moment(date).tz(event.timeZone).format();
@@ -298,6 +304,10 @@ module.exports = function ApiController() {
 
     query.exec(function(err, event) {
       if (err) return next(err);
+      if (event === null) {
+        res.status(404).send({ err: "This event cannot be updated" });
+        return;
+      }
       const sheetId = event.sheet.id;
       const range = event.sheet.range;
 
@@ -310,7 +320,15 @@ module.exports = function ApiController() {
             range: range,
             resource: {
               majorDimension: "ROWS",
-              values: [[startDate, startTime, endDate, endTime, summary]]
+              values: [
+                [
+                  sheet.startDate,
+                  sheet.startTime,
+                  sheet.endDate,
+                  sheet.endTime,
+                  sheet.summary
+                ]
+              ]
             }
           },
           function(err, response) {
@@ -327,8 +345,8 @@ module.exports = function ApiController() {
             calendarId: CalId,
             eventId: eventId,
             resource: {
-              summary: summary,
-              description: summary,
+              summary: sheet.summary,
+              description: sheet.summary,
               start: {
                 dateTime: formatTimeZone(startDateTime)
               },
@@ -364,7 +382,6 @@ module.exports = function ApiController() {
     });
 
     // find db doc
-
     const event = Event.findOne({
       $and: [
         {
@@ -378,7 +395,10 @@ module.exports = function ApiController() {
 
     event.exec(function(err, doc) {
       if (err) return next(err);
-      if (doc === null) res.end("NO");
+      if (doc === null) {
+        res.status(404).send({ err: "This event cannot be deleted" });
+        return;
+      }
       const row = doc.sheet.range;
       const sheetId = doc.sheet.id;
 
@@ -454,9 +474,24 @@ module.exports = function ApiController() {
     );
   };
 
-  const createCalendar = function(req, res, next) {
+  const createCalendar = async function(req, res, next) {
     var token = req.user.google.token;
     var refreshToken = req.user.google.refreshToken;
+
+    try {
+      req.sanitizeBody("calendar").trim();
+      req.sanitizeBody("calendar").escape();
+      req.checkBody("calendar", "Must provide a calendar name").notEmpty();
+
+      var errors = await req.getValidationResult();
+
+      if (!errors.isEmpty()) {
+        return next(errors.array().map(e => e.msg));
+      }
+
+    } catch (err) {
+      return next(err);
+    }
 
     oauth2Client.setCredentials({
       access_token: token,
@@ -483,6 +518,21 @@ module.exports = function ApiController() {
   const createSheet = async function(req, res, next) {
     var token = req.user.google.token;
     var refreshToken = req.user.google.refreshToken;
+
+    try {
+      req.sanitizeBody("sheet").trim();
+      req.sanitizeBody("sheet").escape();
+      req.checkBody("sheet", "Must provide a sheet name").notEmpty();
+
+      var errors = await req.getValidationResult();
+
+      if (!errors.isEmpty()) {
+        return next(errors.array().map(e => e.msg));
+      }
+
+    } catch (err) {
+      return next(err);
+    }
 
     oauth2Client.setCredentials({
       access_token: token,

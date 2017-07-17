@@ -32,7 +32,8 @@ import {
   RESPONSE_DIALOG_CLOSE,
   RESPONSE_DIALOG_OPEN,
   SET_ERROR,
-  SET_MESSAGE
+  SET_MESSAGE,
+  IS_FETCHING
 } from "./types.js";
 
 export const authUser = id => {
@@ -61,10 +62,21 @@ export const unauthUser = () => {
   };
 };
 
-export const setError = err => ({
-  type: SET_ERROR,
-  payload: err
-});
+export const setError = err => {
+  return dispatch => {
+    dispatch(showLoader(false));
+    let error;
+    if (typeof err === "object") {
+      error = JSON.stringify(err, null, 2);
+    } else {
+      error = err;
+    }
+    dispatch({
+      type: SET_ERROR,
+      payload: error
+    });
+  }
+};
 export const setMessage = msg => ({
   type: SET_MESSAGE,
   payload: msg
@@ -74,8 +86,15 @@ export const showFormError = () => ({
   type: SHOW_FORM_ERROR
 });
 
+export const showLoader = x => ({
+  type: IS_FETCHING,
+  payload: x
+});
+
 export const checkForUser = () => {
   return dispatch => {
+    dispatch(responseDialogOpen());
+    dispatch(showLoader(true));
     axios({
       url: `/api/user`,
       method: "get",
@@ -99,6 +118,8 @@ export const checkForUser = () => {
           if (response.data.lastUsed.sheet) {
             dispatch(getSheetMeta(response.data.lastUsed.sheet));
           }
+          dispatch(responseDialogClose());
+          dispatch(showLoader(false));
         }
       })
       .catch(err => {
@@ -133,7 +154,7 @@ export const getUser = id => {
           payload: response.data
         });
       })
-      .catch(err => dispatch(setError(err)));
+      .catch(err => dispatch(setError(err.response.data)));
   };
 };
 
@@ -150,7 +171,7 @@ export const getCalendarList = () => {
           payload: response.data
         });
       })
-      .catch(err => console.log(err));
+      .catch(err => dispatch(setError(err.response.data)));
   };
 };
 
@@ -167,37 +188,29 @@ export const getFiles = () => {
           payload: response.data
         });
       })
-      .catch(err => console.log(err));
+      .catch(err => dispatch(setError(err.response.data)));
   };
 };
 
-export const setStartDate = startDate => {
-  return {
-    type: SET_DATE_START,
-    payload: startDate
-  };
-};
+export const setStartDate = startDate => ({
+  type: SET_DATE_START,
+  payload: startDate
+});
 
-export const setEndDate = endDate => {
-  return {
-    type: SET_DATE_END,
-    payload: endDate
-  };
-};
+export const setEndDate = endDate => ({
+  type: SET_DATE_END,
+  payload: endDate
+});
 
-export const setStartTime = startTime => {
-  return {
-    type: SET_TIME_START,
-    payload: startTime
-  };
-};
+export const setStartTime = startTime => ({
+  type: SET_TIME_START,
+  payload: startTime
+});
 
-export const setEndTime = endTime => {
-  return {
-    type: SET_TIME_END,
-    payload: endTime
-  };
-};
+export const setEndTime = endTime => ({
+  type: SET_TIME_END,
+  payload: endTime
+});
 
 export const setCalendar = calendar => ({
   type: SET_CALENDAR,
@@ -231,7 +244,7 @@ export const getCalendarEvents = id => {
           payload: response.data
         });
       })
-      .catch(err => console.log(err));
+      .catch(err => dispatch(setError(err.response.data)));
   };
 };
 
@@ -248,12 +261,14 @@ export const getSheetMeta = id => {
           payload: response.data
         });
       })
-      .catch(err => console.log(err));
+      .catch(err => dispatch(setError(err.response.data)));
   };
 };
 
 export const createEvent = (event, calendar, sheet) => {
   return dispatch => {
+    dispatch(responseDialogOpen());
+    dispatch(showLoader(true));
     axios({
       method: "post",
       url: `/api/createEvent/${calendar.id}/${sheet.id}`,
@@ -263,6 +278,7 @@ export const createEvent = (event, calendar, sheet) => {
       }
     })
       .then(response => {
+        dispatch(showLoader(false));
         dispatch({
           type: CREATE_EVENT,
           payload: response.data
@@ -273,23 +289,26 @@ export const createEvent = (event, calendar, sheet) => {
         dispatch(getCalendarEvents(calendar.id));
         dispatch(getSheetMeta(sheet.id));
       })
-      .catch(err => console.log(err));
+      .catch(err => dispatch(setError(err.response.data)));
   };
 };
 
 export const deleteEvent = (event, calendarId, sheetId) => {
   return dispatch => {
+    dispatch(responseDialogOpen());
+    dispatch(showLoader(true));
     axios({
       method: "delete",
       url: `/api/deleteEvent/${calendarId}/${event.id}`,
       withCredentials: true
     })
       .then(response => {
+        dispatch(showLoader(false));
         dispatch(getCalendarEvents(calendarId));
         dispatch(getSheetMeta(sheetId));
         dispatch(setMessage("Event Successfully Deleted"));
       })
-      .catch(err => console.log(err));
+      .catch(err => dispatch(setError(err.response.data)));
   };
 };
 
@@ -300,6 +319,8 @@ export const editEvent = event => ({
 
 export const updateEvent = (event, calendar, sheetId) => {
   return dispatch => {
+    dispatch(responseDialogOpen());
+    dispatch(showLoader(true));
     axios({
       method: "put",
       url: `/api/updateEvent/${calendar.id}/${event.editEventId}`,
@@ -309,6 +330,7 @@ export const updateEvent = (event, calendar, sheetId) => {
       }
     })
       .then(response => {
+        dispatch(showLoader(false));
         dispatch({
           type: CREATE_EVENT,
           payload: response.data
@@ -319,7 +341,7 @@ export const updateEvent = (event, calendar, sheetId) => {
         dispatch(getCalendarEvents(calendar.id));
         dispatch(getSheetMeta(sheetId));
       })
-      .catch(err => console.log(err));
+      .catch(err => dispatch(setError(err.response.data)));
   };
 };
 
@@ -352,6 +374,9 @@ export const addNewSheet = value => ({
 
 export const createNewSheet = name => {
   return dispatch => {
+    dispatch(sheetDialogClose());
+    dispatch(responseDialogOpen());
+    dispatch(showLoader(true));
     axios({
       method: "post",
       url: `/api/createSheet`,
@@ -361,17 +386,21 @@ export const createNewSheet = name => {
       }
     })
       .then(response => {
-        dispatch(sheetDialogClose());
+        dispatch(responseDialogClose());
+        dispatch(showLoader(false));
         dispatch(addNewSheet(response.data));
         dispatch(setSheet(response.data));
         dispatch(getSheetMeta(response.data.id));
       })
-      .catch(err => console.log(err));
+      .catch(err => dispatch(setError(err.response.data)));
   };
 };
 
 export const createNewCalendar = (name, timeZone) => {
   return dispatch => {
+    dispatch(calendarDialogClose());
+    dispatch(responseDialogOpen());
+    dispatch(showLoader(true));
     axios({
       method: "post",
       url: `/api/createCalendar`,
@@ -382,13 +411,13 @@ export const createNewCalendar = (name, timeZone) => {
       }
     })
       .then(response => {
-        console.log(response);
-        dispatch(calendarDialogClose());
+        dispatch(responseDialogClose());
+        dispatch(showLoader(false));
         dispatch(addNewCalendar(response.data));
         dispatch(setCalendar(response.data));
         dispatch(getCalendarEvents(response.data.id));
       })
-      .catch(err => console.log(err));
+      .catch(err => dispatch(setError(err.response.data)));
   };
 };
 

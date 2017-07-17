@@ -27,6 +27,7 @@ module.exports = function(passport) {
       passReqToCallback: true // allows us to pass in the req from our route (lets us check if a user is logged in or not)
     },
     function(req, accessToken, refreshToken, params, profile, done) {
+      console.log(params);
       const expiry_date = moment().add(params.expires_in, "s").format("X");
       process.nextTick(function() {
         if (!req.user) {
