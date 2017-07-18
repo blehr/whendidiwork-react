@@ -28,7 +28,7 @@ app.set('view engine', 'pug');
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
-mongoose.connect('mongodb://localhost/whendidiwork2');
+mongoose.connect(process.env.MONGO_URI);
 
 const store = new MongoDBStore({
   uri: process.env.MONGO_URI,
