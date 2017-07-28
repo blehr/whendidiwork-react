@@ -54,11 +54,6 @@ function formatSheetValues(event) {
   };
 }
 
-const weekPast = moment().subtract(7, "days").toDate();
-const weekAhead = moment().add(7, "days").toDate();
-const weekPastGCF = ISODateString(weekPast);
-const weekAheadGCF = ISODateString(weekAhead);
-
 module.exports = function ApiController() {
   const logout = function(req, res) {
     req.logout();
@@ -130,6 +125,11 @@ module.exports = function ApiController() {
     var token = req.user.google.token;
     var refreshToken = req.user.google.refreshToken;
     var CalId = req.params.calendarId;
+
+    const weekPast = moment().subtract(7, "days").toDate();
+    const weekAhead = moment().add(7, "days").toDate();
+    const weekPastGCF = ISODateString(weekPast);
+    const weekAheadGCF = ISODateString(weekAhead);
 
     oauth2Client.setCredentials({
       access_token: token,
