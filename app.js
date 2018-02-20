@@ -14,6 +14,7 @@ const MongoDBStore = require('connect-mongodb-session')(session);
  
 require('dotenv').load();
 require('./services/google-passport')(passport);
+require('./services/google-passport-token')(passport);
 
 const authRouter = require('./routes/auth-router')();
 const apiRouter = require('./routes/api-router')();
@@ -48,7 +49,12 @@ app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
-  store: store
+  store: store,
+  maxAge: new Date(new Date().getTime() + (1000*60*60*24*365)),
+  cookie: {
+    expires: new Date(new Date().getTime() + (1000*60*60*24*365)),
+    secure: false,
+  },
 }));
 
 app.use(passport.initialize());
