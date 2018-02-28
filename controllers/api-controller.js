@@ -141,7 +141,9 @@ module.exports = function ApiController() {
         auth: oauth2Client,
         calendarId: CalId,
         timeMin: weekPastGCF,
-        timeMax: weekAheadGCF
+        timeMax: weekAheadGCF,
+        singleEvents: true,
+        orderBy: 'startTime'
       },
       function(err, response) {
         if (err) {
