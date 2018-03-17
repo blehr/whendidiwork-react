@@ -45,7 +45,7 @@ module.exports = function(passport) {
               if (!user.google.token) {
 
                 user.google.token = accessToken;
-                if (!user.google.refreshToken) user.google.refreshToken = refreshToken;
+                if (refreshToken && refreshToken != null) user.google.refreshToken = refreshToken;
                 user.google.displayName = profile.displayName;
                 user.google.email = profile.emails[0].value;
                 user.google.profileImg = profile._json.picture;
@@ -61,7 +61,7 @@ module.exports = function(passport) {
               //save new token
               user.google.profileImg = profile._json.picture;
               user.google.token = accessToken;
-              if (!user.google.refreshToken) user.google.refreshToken = refreshToken;
+              if (refreshToken && refreshToken != null) user.google.refreshToken = refreshToken;
               user.google.expiry_date = expiry_date;
               user.save(function(err) {
                   if (err) throw new ERROR("Error saving new token: " + err);
@@ -97,7 +97,7 @@ module.exports = function(passport) {
           // update the current users google credentials
           user.google.id = profile.id;
           user.google.token = accessToken;
-          if (!user.google.refreshToken) user.google.refreshToken = refreshToken;
+          if (refreshToken && refreshToken != null) user.google.refreshToken = refreshToken;
           user.google.displayName = profile.displayName;
           user.google.email = profile.emails[0].value;
           user.google.profileImg = profile._json.picture;
