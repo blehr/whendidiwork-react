@@ -1,7 +1,7 @@
 var moment = require("moment-timezone");
 var Event = require("../models/event.js");
 var User = require("../models/users.js");
-var google = require("googleapis");
+var {google} = require("googleapis");
 var OAuth2 = google.auth.OAuth2;
 var auth = require("../services/auth");
 
@@ -54,6 +54,23 @@ function formatSheetValues(event) {
   };
 }
 
+async function storeAccessToken() {
+  var accessToken = oauth2Client.credentials.access_token;
+  var expire_time = oauth2Client.credentials.expiry_date;
+
+   // store token in case of refresh
+   try {
+    var user = await User.findOne({ "google.id": req.user.google.id });
+
+    user.google.token = accessToken;
+    user.google.expire_time = expire_time;
+
+    await user.save();
+  } catch (err) {
+    return next(err);
+  }
+}
+
 module.exports = function ApiController() {
   const logout = function(req, res) {
     req.logout();
@@ -71,10 +88,12 @@ module.exports = function ApiController() {
   const getCalendarList = function(req, res, next) {
     var token = req.user.google.token;
     var refreshToken = req.user.google.refreshToken;
+    var expiry_date = +req.user.google.expiry_date;
 
     oauth2Client.setCredentials({
       access_token: token,
-      refresh_token: refreshToken
+      refresh_token: refreshToken,
+      expiry_date: expiry_date
     });
 
     calendar.calendarList.list(
@@ -86,10 +105,12 @@ module.exports = function ApiController() {
           return next(err);
         }
         // get user timeZone
-        const primaryTimeZone = response.items.filter(cal => cal.primary);
+        const primaryTimeZone = response.data.items.filter(cal => cal.primary);
+
+        storeAccessToken();
 
         res.json({
-          calendars: response.items,
+          calendars: response.data.items,
           lastUsed: req.user.lastUsed.calendar,
           timeZone: primaryTimeZone[0].timeZone
         });
@@ -100,10 +121,12 @@ module.exports = function ApiController() {
   const getFiles = function(req, res, next) {
     var token = req.user.google.token;
     var refreshToken = req.user.google.refreshToken;
+    var expiry_date = +req.user.google.expiry_date;
 
     oauth2Client.setCredentials({
       access_token: token,
-      refresh_token: refreshToken
+      refresh_token: refreshToken,
+      expiry_date: expiry_date,
     });
 
     drive.files.list(
@@ -116,7 +139,9 @@ module.exports = function ApiController() {
         if (err) {
           return next(err);
         }
-        res.send({ sheets: response.files, lastUsed: req.user.lastUsed.sheet });
+
+        storeAccessToken();
+        res.send({ sheets: response.data.files, lastUsed: req.user.lastUsed.sheet });
       }
     );
   };
@@ -124,6 +149,7 @@ module.exports = function ApiController() {
   const getEvents = function(req, res, next) {
     var token = req.user.google.token;
     var refreshToken = req.user.google.refreshToken;
+    var expiry_date = +req.user.google.expiry_date;
     var CalId = req.params.calendarId;
 
     const weekPast = moment().subtract(7, "days").toDate();
@@ -133,7 +159,8 @@ module.exports = function ApiController() {
 
     oauth2Client.setCredentials({
       access_token: token,
-      refresh_token: refreshToken
+      refresh_token: refreshToken,
+      expiry_date: expiry_date
     });
 
     calendar.events.list(
@@ -149,8 +176,10 @@ module.exports = function ApiController() {
         if (err) {
           return next(err);
         }
-        if (response.items) {
-          res.send(response.items);
+
+        storeAccessToken();
+        if (response.data.items) {
+          res.send(response.data.items);
         } else {
           res.send([]);
         }
@@ -161,6 +190,7 @@ module.exports = function ApiController() {
   const createEvent = async function(req, res, next) {
     var token = req.user.google.token;
     var refreshToken = req.user.google.refreshToken;
+    var expiry_date = +req.user.google.expiry_date;
     var CalId = req.params.calendarId;
     var sheetId = req.params.sheetId;
 
@@ -180,7 +210,8 @@ module.exports = function ApiController() {
 
     oauth2Client.setCredentials({
       access_token: token,
-      refresh_token: refreshToken
+      refresh_token: refreshToken,
+      expiry_date: expiry_date
     });
 
     // track last used calendar and sheet
@@ -217,7 +248,8 @@ module.exports = function ApiController() {
         },
         function(err, response) {
           if (err) reject(err);
-          resolve(response);
+          storeAccessToken();
+          resolve(response.data);
         }
       );
     });
@@ -240,7 +272,7 @@ module.exports = function ApiController() {
         },
         function(err, response) {
           if (err) reject(err);
-          resolve(response);
+          resolve(response.data);
         }
       );
     });
@@ -275,6 +307,7 @@ module.exports = function ApiController() {
   const updateEvent = function(req, res, next) {
     var token = req.user.google.token;
     var refreshToken = req.user.google.refreshToken;
+    var expiry_date = +req.user.google.expiry_date;
     var CalId = req.params.calendarId;
     var eventId = req.params.eventId;
 
@@ -290,7 +323,8 @@ module.exports = function ApiController() {
 
     oauth2Client.setCredentials({
       access_token: token,
-      refresh_token: refreshToken
+      refresh_token: refreshToken,
+      expiry_date: expiry_date
     });
 
     const query = Event.findOne({
@@ -335,7 +369,8 @@ module.exports = function ApiController() {
           },
           function(err, response) {
             if (err) reject(err);
-            resolve(response);
+            storeAccessToken();
+            resolve(response.data);
           }
         );
       });
@@ -359,7 +394,7 @@ module.exports = function ApiController() {
           },
           function(err, response) {
             if (err) reject(err);
-            resolve(response);
+            resolve(response.data);
           }
         );
       });
@@ -375,12 +410,14 @@ module.exports = function ApiController() {
   const deleteEvent = async function(req, res, next) {
     var token = req.user.google.token;
     var refreshToken = req.user.google.refreshToken;
+    var expiry_date = +req.user.google.expiry_date;
     var eventId = req.params.eventId;
     var CalId = req.params.calendarId;
 
     oauth2Client.setCredentials({
       access_token: token,
-      refresh_token: refreshToken
+      refresh_token: refreshToken,
+      expiry_date: expiry_date
     });
 
     // find db doc
@@ -418,7 +455,8 @@ module.exports = function ApiController() {
           },
           function(err, response) {
             if (err) reject(err);
-            resolve(response);
+            storeAccessToken();
+            resolve(response.data);
           }
         );
       });
@@ -432,7 +470,7 @@ module.exports = function ApiController() {
           },
           function(err, response) {
             if (err) reject(err);
-            resolve(response);
+            resolve(response.data);
           }
         );
       });
@@ -448,11 +486,13 @@ module.exports = function ApiController() {
   const getSheetMeta = function(req, res, next) {
     var token = req.user.google.token;
     var refreshToken = req.user.google.refreshToken;
+    var expiry_date = +req.user.google.expiry_date;
     var sheetId = req.params.sheetId;
 
     oauth2Client.setCredentials({
       access_token: token,
-      refresh_token: refreshToken
+      refresh_token: refreshToken,
+      expiry_date: expiry_date
     });
 
     sheets.spreadsheets.values.get(
@@ -465,10 +505,11 @@ module.exports = function ApiController() {
         if (err) {
           return next(err);
         }
-        if (response.values) {
-          response.values.length < 11
-            ? res.send(response.values.slice(1))
-            : res.send(response.values.slice(-10));
+        storeAccessToken();
+        if (response.data.values) {
+          response.data.values.length < 11
+            ? res.send(response.data.values.slice(1))
+            : res.send(response.data.values.slice(-10));
         } else {
           res.send([[]]);
         }
@@ -479,6 +520,7 @@ module.exports = function ApiController() {
   const createCalendar = async function(req, res, next) {
     var token = req.user.google.token;
     var refreshToken = req.user.google.refreshToken;
+    var expiry_date = +req.user.google.expiry_date;
 
     try {
       req.sanitizeBody("calendar").trim();
@@ -497,7 +539,8 @@ module.exports = function ApiController() {
 
     oauth2Client.setCredentials({
       access_token: token,
-      refresh_token: refreshToken
+      refresh_token: refreshToken,
+      expiry_date: expiry_date
     });
 
     calendar.calendars.insert(
@@ -512,7 +555,8 @@ module.exports = function ApiController() {
         if (err) {
           return next(err);
         }
-        res.send(response);
+        storeAccessToken();
+        res.send(response.data);
       }
     );
   };
@@ -520,6 +564,7 @@ module.exports = function ApiController() {
   const createSheet = async function(req, res, next) {
     var token = req.user.google.token;
     var refreshToken = req.user.google.refreshToken;
+    var expiry_date = +req.user.google.expiry_date;
 
     try {
       req.sanitizeBody("sheet").trim();
@@ -538,7 +583,8 @@ module.exports = function ApiController() {
 
     oauth2Client.setCredentials({
       access_token: token,
-      refresh_token: refreshToken
+      refresh_token: refreshToken,
+      expiry_date: expiry_date
     });
 
     const createFilePromise = new Promise((resolve, reject) => {
@@ -552,7 +598,7 @@ module.exports = function ApiController() {
         },
         function(err, response) {
           if (err) return next(err);
-          resolve(response);
+          resolve(response.data);
         }
       );
     });
@@ -573,6 +619,7 @@ module.exports = function ApiController() {
         },
         function(err, response) {
           if (err) return next(err);
+          storeAccessToken();
           res.send(fileResponse);
         }
       );

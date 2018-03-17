@@ -1,5 +1,5 @@
 const User = require("../models/users.js");
-const google = require("googleapis");
+const {google} = require("googleapis");
 const OAuth2 = google.auth.OAuth2;
 const auth = require("./auth");
 const moment = require("moment");
@@ -16,7 +16,7 @@ exports.checkToken = (req, res, next) => {
     return next();
   }
 
-  if (moment().subtract(req.user.google.expiry_date, "s").format("X") > -300) {
+  if (moment().subtract(req.user.google.expiry_date, "s").format("x") > -3000) {
     oauth2Client.setCredentials({
       access_token: req.user.google.token,
       refresh_token: req.user.google.refreshToken

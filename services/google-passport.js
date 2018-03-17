@@ -27,8 +27,8 @@ module.exports = function(passport) {
       passReqToCallback: true // allows us to pass in the req from our route (lets us check if a user is logged in or not)
     },
     function(req, accessToken, refreshToken, params, profile, done) {
-      console.log(params);
-      const expiry_date = moment().add(params.expires_in, "s").format("X");
+      console.log("refreshToken", refreshToken);
+      const expiry_date = moment().add(params.expires_in, "s").format("x");
       process.nextTick(function() {
         if (!req.user) {
 
@@ -46,7 +46,7 @@ module.exports = function(passport) {
               if (!user.google.token) {
 
                 user.google.token = accessToken;
-                if (!user.google.refreshToken) user.google.refreshToken = refreshToken;
+                if (refreshToken && refreshToken != null) user.google.refreshToken = refreshToken;
                 user.google.displayName = profile.displayName;
                 user.google.email = profile.emails[0].value;
                 user.google.profileImg = profile.photos[0].value;
@@ -62,7 +62,7 @@ module.exports = function(passport) {
               //save new token
               user.google.profileImg = profile.photos[0].value;
               user.google.token = accessToken;
-              if (!user.google.refreshToken) user.google.refreshToken = refreshToken;
+              if (refreshToken && refreshToken != null) user.google.refreshToken = refreshToken;
               user.google.expiry_date = expiry_date;
               user.save(function(err) {
                   if (err) throw new ERROR("Error saving new token: " + err);

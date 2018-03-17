@@ -9,7 +9,8 @@ const ApiController = require("../controllers/api-controller.js")();
 
 const apiRouter = express.Router();
 apiRouter.use(cors({ origin: true, credentials: true }));
-apiRouter.use(checkToken);
+// apiRouter.use(checkToken);
+
 
 const routes = () => {
   apiRouter.route("/user").get(ApiController.getUser);

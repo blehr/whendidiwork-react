@@ -35,7 +35,6 @@ const routes = function routes() {
   authRouter.route("/mobilelogin").post(
     passport.authenticate('google-authcode'),
     function(req, res) {
-      // console.log('res', req.user);
       res.send(req.user);
     }
   )

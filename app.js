@@ -79,7 +79,7 @@ app.use(function(req, res, next) {
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   console.log(err);
-  res.send(err);
+  res.send('APP ERROR HANDLER ', err);
 });
 
 module.exports = app;
