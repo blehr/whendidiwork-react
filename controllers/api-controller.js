@@ -67,7 +67,7 @@ async function storeAccessToken() {
 
     await user.save();
   } catch (err) {
-    return next(err);
+    return err;
   }
 }
 
