@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from 'react-router-dom';
 
 const Footer = props => {
   return (
@@ -8,6 +9,7 @@ const Footer = props => {
           <p className="footer-p">
             &#169; 2015 <a href="http://brandonlehr.com">Brandon Lehr</a>
           </p>
+          <Link to="/privacypolicy" className="privacy-link" >Privacy Policy</Link>
         </div>
       </footer>
       <div id="bottom-bar" />

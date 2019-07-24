@@ -307,8 +307,12 @@ footer {
 .footer-div {
   display: flex;
   align-items: flex-end;
+  justify-content: space-around;
   width: 100%;
   height: 100%;
+}
+.privacy-link {
+  margin-bottom: 10px;
 }
 .footer-img {
   display: table-cell;
@@ -365,9 +369,9 @@ footer a:focus {
     -webkit-flex-wrap: nowrap;
     -ms-flex-wrap: nowrap;
     flex-wrap: nowrap;
-    -webkit-justify-content: space-between;
+    -webkit-justify-content: space-around;
     -ms-flex-pack: justify;
-    justify-content: space-between;
+    justify-content: space-around;
     -webkit-align-content: stretch;
     -ms-flex-line-pack: stretch;
     align-content: stretch;

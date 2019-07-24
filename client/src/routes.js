@@ -9,6 +9,7 @@ import Home from './components/routes/Home';
 import Login from './components/routes/Login';
 import Faq from './components/routes/Faq';
 import AuthCallback from './components/routes/Auth-Callback';
+import PrivacyPolicy from './components/routes/privacy_policy';
 
 ReactGA.initialize('UA-59962727-1');
 
@@ -24,6 +25,7 @@ const Routes = props => (
       <Route path="/auth/google/callback/:id?" component={AuthCallback} />
       <Route path="/login" component={Login} />
       <Route path="/faq" component={Faq} />
+      <Route path="/privacypolicy" component={PrivacyPolicy} />
     </div>
   </Router>
 );

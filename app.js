@@ -29,11 +29,11 @@ app.set('view engine', 'pug');
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
-mongoose.connect(process.env.MONGO_URI);
+mongoose.connect(process.env.MONGO_URI, {useMongoClient: true,});
 
 const store = new MongoDBStore({
   uri: process.env.MONGO_URI,
-  collection: 'mySessions'
+  collection: 'mySessions', 
 });
 
 app.use(logger('dev'));
@@ -83,3 +83,7 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
+
+
+// rsync -avzhe ssh ./  brandon@45.55.209.206:/home/brandon/whendidiwork/client
+// rsync -avzhe ssh brandon@45.55.209.206:/home/brandon/whendidiwork /Users/brandonlehr/Desktop/whendidiwork-from-server

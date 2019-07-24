@@ -4,6 +4,7 @@ import whendidiworkLogo from "../../assets/img/whendidiwork_icon.png";
 import fullScreenshot from "../../assets/img/screenshot-whendidiwork-full.png";
 import mobileScreenshot from "../../assets/img/screenshot-whendidiwork-mobile.png";
 import RaisedButton from "material-ui/RaisedButton";
+import googleImage from "../../assets/img/btn_google_signin_dark_normal_web@2x.png";
 class Login extends Component {
   render() {
     return (
@@ -20,13 +21,16 @@ class Login extends Component {
                 whendidiwork calendar.
               </p>
               <p>Keep track of everything in one convenient place!</p>
-              <RaisedButton
+              <a href="/auth/google" className="login-google" style={{background: 'transparent', border: 'none'}}>
+                <img src={googleImage} alt="Sign in" style={{width:'100%'}} />
+              </a>
+              {/* <RaisedButton
                 href="/auth/google"
                 primary={true}
                 label="Login with Google"
                 className="login-google"
                 style={{ display: "block" }}
-              />
+              /> */}
             </div>
             <div className="col-sm-6">
               <div className="logo-div">
