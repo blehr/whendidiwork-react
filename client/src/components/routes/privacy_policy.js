@@ -1,6 +1,10 @@
 import React from "react";
 import App from "../App";
 
+const color = {
+  color: '#1A75D1',
+}
+
 const PrivacyPolicy = props => {
   return (
     <App>
@@ -36,14 +40,14 @@ const PrivacyPolicy = props => {
           but not limited to
         </p>
         <ul>
-          <li>User Profile Data (Login, and identification),</li>
+          <li><span style={color} >User Profile Data</span> (Login, and identification),</li>
           <li>
-            Google Calendar (Creating Calendars, adding, updating, and deleting events),
+          <span style={color} >Google Calendar</span> (Creating Calendars, adding, updating, and deleting events),
           </li>
           <li>
-            Google Drive (Creating Spreadsheets, Retrieving Sheets for use)
+          <span style={color} >Google Drive https://www.googleapis.com/auth/drive</span> (This allows the app to create new sheets for writing calendar events to. This also allows the app to locate and show an available list of sheets to be used in the application.)
           </li>
-          <li>Google Sheets (Writing data to Sheets).</li>
+          <li><span style={color} >Google Sheets https://www.googleapis.com/auth/spreadsheets</span> (This allows the app to write the calendar event to the sheet, that the user has selected.).</li>
         </ul>
         <p>
           The app does use third party services that may collect information
