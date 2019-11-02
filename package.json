@@ -19,7 +19,7 @@
     "helmet": "^3.6.1",
     "moment": "^2.18.1",
     "moment-timezone": "^0.5.13",
-    "mongoose": "^4.10.3",
+    "mongoose": "^5.7.5",
     "morgan": "~1.8.1",
     "nodemon": "^1.17.2",
     "passport": "^0.3.2",
