@@ -3757,8 +3757,8 @@ lodash.memoize@^4.1.2:
   resolved "https://registry.yarnpkg.com/lodash.memoize/-/lodash.memoize-4.1.2.tgz#bcc6c49a42a2840ed997f323eada5ecd182e0bfe"
 
 lodash.merge@^4.6.0:
-  version "4.6.0"
-  resolved "https://registry.yarnpkg.com/lodash.merge/-/lodash.merge-4.6.0.tgz#69884ba144ac33fe699737a6086deffadd0f89c5"
+  version "4.6.2"
+  resolved "https://registry.yarnpkg.com/lodash.merge/-/lodash.merge-4.6.2.tgz#558aa53b43b661e1925a0afdfa36a9a1085fe57a"
 
 lodash.template@^4.4.0:
   version "4.4.0"
@@ -3969,6 +3969,10 @@ mkdirp@0.5.1, mkdirp@0.5.x, "mkdirp@>=0.5 0", mkdirp@^0.5.0, mkdirp@^0.5.1, mkdi
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-0.5.1.tgz#30057438eac6cf7f8c4767f38648d6697d75c903"
   dependencies:
     minimist "0.0.8"
+
+moment@^2.24.0:
+  version "2.27.0"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.27.0.tgz#8bff4e3e26a236220dfe3e36de756b6ebaa0105d"
 
 ms@0.7.1:
   version "0.7.1"
@@ -4897,11 +4901,9 @@ react-event-listener@^0.4.5:
     prop-types "^15.5.4"
     warning "^3.0.0"
 
-react-ga@^1.4.1:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/react-ga/-/react-ga-1.5.0.tgz#6bf8011950b024095305d49e170d447d3bc76aaf"
-  dependencies:
-    object-assign "^4.0.1"
+react-ga@^2.2.0:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/react-ga/-/react-ga-2.7.0.tgz#24328f157f31e8cffbf4de74a3396536679d8d7c"
 
 react-redux@^5.0.5:
   version "5.0.5"
