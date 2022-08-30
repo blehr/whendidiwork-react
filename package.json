@@ -18,7 +18,7 @@
     "googleapis": "^27.0.0",
     "helmet": "^3.6.1",
     "moment": "^2.18.1",
-    "moment-timezone": "^0.5.13",
+    "moment-timezone": "^0.5.35",
     "mongoose": "^4.10.3",
     "morgan": "~1.8.1",
     "nodemon": "^1.17.2",
